@@ -1,0 +1,18 @@
+2026-04-20 18:07:58.9090 Info Registered target NLog.Targets.FileTarget(Name=exceptions)
+2026-04-20 18:07:58.9176 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2026-04-20 18:07:58.9301 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.4.2092. Product version: 5.2.4+5ed75b125a691ce9f01e64641f1a79f438385847. GlobalAssemblyCache: False
+2026-04-20 18:07:58.9860 Info Validating config: TargetNames=allfile, exceptions, ConfigItems=44, FilePath=/Users/pawel/docker-iso-treatment-support-app/IsoTreatmentProcessSupportAPI/IsoTreatmentProcessSupportAPI/bin/Debug/net8.0/NLog.config
+2026-04-20 18:07:58.9910 Info Configuration initialized.
+2026-04-20 18:07:58.9910 Info Validating config: TargetNames=allfile, exceptions, ConfigItems=44, FilePath=/Users/pawel/docker-iso-treatment-support-app/IsoTreatmentProcessSupportAPI/IsoTreatmentProcessSupportAPI/bin/Debug/net8.0/NLog.config
+2026-04-20 18:09:47.1984 Info Registered target NLog.Targets.FileTarget(Name=exceptions)
+2026-04-20 18:09:47.2052 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2026-04-20 18:09:47.2132 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.4.2092. Product version: 5.2.4+5ed75b125a691ce9f01e64641f1a79f438385847. GlobalAssemblyCache: False
+2026-04-20 18:09:47.2644 Info Validating config: TargetNames=allfile, exceptions, ConfigItems=44, FilePath=/Users/pawel/docker-iso-treatment-support-app/IsoTreatmentProcessSupportAPI/IsoTreatmentProcessSupportAPI/bin/Debug/net8.0/NLog.config
+2026-04-20 18:09:47.2679 Info Configuration initialized.
+2026-04-20 18:09:47.2679 Info Validating config: TargetNames=allfile, exceptions, ConfigItems=44, FilePath=/Users/pawel/docker-iso-treatment-support-app/IsoTreatmentProcessSupportAPI/IsoTreatmentProcessSupportAPI/bin/Debug/net8.0/NLog.config
+2026-04-20 18:39:49.7518 Info Registered target NLog.Targets.FileTarget(Name=exceptions)
+2026-04-20 18:39:49.7593 Info Registered target NLog.Targets.FileTarget(Name=allfile)
+2026-04-20 18:39:49.7710 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.4.2092. Product version: 5.2.4+5ed75b125a691ce9f01e64641f1a79f438385847. GlobalAssemblyCache: False
+2026-04-20 18:39:49.8248 Info Validating config: TargetNames=allfile, exceptions, ConfigItems=44, FilePath=/Users/pawel/docker-iso-treatment-support-app/IsoTreatmentProcessSupportAPI/IsoTreatmentProcessSupportAPI/bin/Debug/net8.0/NLog.config
+2026-04-20 18:39:49.8282 Info Configuration initialized.
+2026-04-20 18:39:49.8282 Info Validating config: TargetNames=allfile, exceptions, ConfigItems=44, FilePath=/Users/pawel/docker-iso-treatment-support-app/IsoTreatmentProcessSupportAPI/IsoTreatmentProcessSupportAPI/bin/Debug/net8.0/NLog.config

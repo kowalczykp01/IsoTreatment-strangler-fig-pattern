@@ -1,0 +1,70 @@
+# Build results
+bin/
+obj/
+artifacts/
+
+# ASP.NET / .NET
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+project.lock.json
+project.fragment.lock.json
+packages/
+TestResults/
+coverage/
+coverage.*
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Logs
+*.log
+logs/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages.lock.json
+
+# Docker
+docker-compose.override.yml
+**/docker-compose.override.yml
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# OS / temp
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.tmp
+*.temp
+~$*
+
+# Secrets / local config
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+*.pfx
+*.key
+*.pem
+
+# Publish output
+publish/
+wwwroot/lib/
+
+# Optional: EF Core / migrations cache artifacts
+*.dbmdl
+*.jfm

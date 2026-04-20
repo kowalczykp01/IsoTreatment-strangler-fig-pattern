@@ -1,0 +1,46 @@
+services:
+  isotreatment.apigateway:
+    image: ${DOCKER_REGISTRY-}isotreatment-apigateway:latest
+    container_name: isotreatment.apigateway
+    ports:
+      - "5124:8080"
+    build:
+      context: .
+      dockerfile: IsoTreatment.ApiGateway/Dockerfile
+    depends_on:
+      - isotreatment.users
+      - isotreatment.monolith
+      - isotreatment.database
+
+  isotreatment.users:
+    image: ${DOCKER_REGISTRY-}isotreatment-users:latest
+    container_name: isotreatment.users
+    ports:
+      - "5250:8080"
+    build:
+      context: .
+      dockerfile: IsoTreatment.Users/Dockerfile
+
+  isotreatment.monolith:
+    image: ${DOCKER_REGISTRY-}isotreatment-support:latest
+    container_name: isotreatment.monolith
+    ports:
+      - "5113:8080"
+    build:
+      context: ./IsoTreatmentProcessSupportAPI
+      dockerfile: Dockerfile
+
+  isotreatment.database:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: isotreatment.database
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: "boxsy2-xobpyp-tonmUs"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+volumes:
+  mssql_data:
