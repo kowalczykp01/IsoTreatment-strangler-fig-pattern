@@ -11,24 +11,56 @@ services:
       - isotreatment.users
       - isotreatment.monolith
       - isotreatment.database
+      - jaeger
+    networks:
+      - app-network
+    environment:
+      - OTEL_SERVICE_NAME=IsoTreatment.ApiGateway
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_TRACES_SAMPLER=always_on
+      - OTEL_LOG_LEVEL=debug
 
   isotreatment.users:
     image: ${DOCKER_REGISTRY-}isotreatment-users:latest
     container_name: isotreatment.users
     ports:
       - "5250:8080"
+    depends_on: 
+      - jaeger
     build:
       context: .
       dockerfile: IsoTreatment.Users/Dockerfile
+    networks:
+      - app-network
+    environment:
+      - OTEL_SERVICE_NAME=IsoTreatment.Users
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_TRACES_SAMPLER=always_on
+      - OTEL_LOG_LEVEL=debug
 
   isotreatment.monolith:
     image: ${DOCKER_REGISTRY-}isotreatment-support:latest
     container_name: isotreatment.monolith
     ports:
       - "5113:8080"
+    depends_on: 
+      - jaeger
     build:
       context: ./IsoTreatmentProcessSupportAPI
       dockerfile: Dockerfile
+    networks:
+      - app-network
+    environment:
+      - OTEL_SERVICE_NAME=IsoTreatmentProcessSupportAPI
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_TRACES_SAMPLER=always_on
+      - OTEL_LOG_LEVEL=debug
 
   isotreatment.database:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -41,6 +73,22 @@ services:
       MSSQL_SA_PASSWORD: "boxsy2-xobpyp-tonmUs"
     volumes:
       - mssql_data:/var/opt/mssql
-
+    networks:
+      - app-network
+  jaeger:
+    image: jaegertracing/jaeger:2.6.0
+    container_name: jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+      - "4317:4317"
+      - "4318:4318"
+    networks:
+      - app-network
 volumes:
   mssql_data:
+networks:
+  app-network:
+    driver: bridge

@@ -1,7 +1,22 @@
 using Application;
 using Infrastructure;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder
+    .Services.AddOpenTelemetry()
+    .WithTracing(b =>
+    {
+        b.AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .SetResourceBuilder(
+                ResourceBuilder.CreateDefault().AddService("IsoTreatment.Users", "1.0.0")
+            )
+            .SetSampler(new AlwaysOnSampler())
+            .AddOtlpExporter();
+    });
 
 builder.Services.AddOpenApi();
 

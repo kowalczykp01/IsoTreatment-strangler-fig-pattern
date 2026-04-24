@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using IsoTreatmentProcessSupportAPI;
@@ -10,44 +12,61 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
-using System.Reflection;
-using System.Text;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseNLog();
+
+builder
+    .Services.AddOpenTelemetry()
+    .WithTracing(b =>
+    {
+        b.AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .SetResourceBuilder(
+                ResourceBuilder.CreateDefault().AddService("IsoTreatmentProcessSupportAPI", "1.0.0")
+            )
+            .SetSampler(new AlwaysOnSampler())
+            .AddOtlpExporter();
+    });
 
 // Add services to the container.
 var authenticationSettings = new AuthenticationSettings();
 
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 builder.Services.AddSingleton(authenticationSettings);
-builder.Services.AddAuthentication(option =>
-{
-    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddCookie(x =>
-{
-    x.Cookie.Name = "token";
-
-}).AddJwtBearer(cfg =>
-{
-    cfg.SaveToken = true;
-    cfg.Audience = authenticationSettings.Audience;
-    cfg.TokenValidationParameters = new TokenValidationParameters()
+builder
+    .Services.AddAuthentication(option =>
     {
-        ValidIssuer = authenticationSettings.Issuer,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.SigningKey)),
-    };
-    cfg.Events = new JwtBearerEvents
+        option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddCookie(x =>
     {
-        OnMessageReceived = context =>
+        x.Cookie.Name = "token";
+    })
+    .AddJwtBearer(cfg =>
+    {
+        cfg.SaveToken = true;
+        cfg.Audience = authenticationSettings.Audience;
+        cfg.TokenValidationParameters = new TokenValidationParameters()
         {
-            context.Token = context.Request.Cookies["token"];
-            return Task.CompletedTask;
-        }
-    };
-});
+            ValidIssuer = authenticationSettings.Issuer,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(authenticationSettings.SigningKey)
+            ),
+        };
+        cfg.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["token"];
+                return Task.CompletedTask;
+            },
+        };
+    });
 
 builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddControllers().AddFluentValidation();
@@ -68,11 +87,14 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("FrontendClient", builder =>
-    builder.AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials()
-    .WithOrigins("http://localhost:5173")
+    options.AddPolicy(
+        "FrontendClient",
+        builder =>
+            builder
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .WithOrigins("http://localhost:5173")
     );
 });
 
