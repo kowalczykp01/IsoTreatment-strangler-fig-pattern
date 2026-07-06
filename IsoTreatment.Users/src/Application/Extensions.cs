@@ -1,4 +1,5 @@
 using Application.Abstractions;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -29,6 +30,8 @@ public static class Extensions
                 .AsImplementedInterfaces()
                 .WithScopedLifetime()
         );
+
+        services.AddValidatorsFromAssembly(applicationAssembly);
 
         return services;
     }

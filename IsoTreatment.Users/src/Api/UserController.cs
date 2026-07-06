@@ -40,11 +40,11 @@ namespace Api
                 jwt!.AccessToken,
                 new CookieOptions
                 {
-                    Expires = DateTime.Now.AddMinutes(15),
+                    Expires = DateTime.Now.AddDays(1),
                     HttpOnly = true,
                     Secure = true,
                     IsEssential = true,
-                    SameSite = SameSiteMode.Lax,
+                    SameSite = SameSiteMode.None,
                 }
             );
 
@@ -60,7 +60,7 @@ namespace Api
         {
             await handler.HandleAsync(command);
 
-            return Created();
+            return Ok();
         }
     }
 }

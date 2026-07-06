@@ -4,6 +4,7 @@ using Domain;
 using Domain.Repositories;
 using Domain.UnitOfWork;
 using Infrastructure.Auth;
+using Infrastructure.Email;
 using Infrastructure.Repositories;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,6 +19,7 @@ namespace Infrastructure;
 public static class Extensions
 {
     private const string AuthOptionsSectionName = "Auth";
+    private const string EmailOptionsSectionName = "Email";
 
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
@@ -34,6 +36,12 @@ public static class Extensions
         // security
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddSingleton<IPasswordManager, PasswordManager>();
+
+        // email
+        services.Configure<EmailOptions>(
+            configuration.GetRequiredSection(EmailOptionsSectionName)
+        );
+        services.AddSingleton<IEmailSender, MailkitService>();
 
         // auth
         var authOptions = configuration.GetOptions<AuthOptions>(AuthOptionsSectionName);

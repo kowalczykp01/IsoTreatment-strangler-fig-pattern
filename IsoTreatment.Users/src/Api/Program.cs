@@ -1,4 +1,6 @@
+using Api.Middlewares;
 using Application;
+using FluentValidation.AspNetCore;
 using Infrastructure;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
@@ -23,8 +25,12 @@ builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 var app = builder.Build();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

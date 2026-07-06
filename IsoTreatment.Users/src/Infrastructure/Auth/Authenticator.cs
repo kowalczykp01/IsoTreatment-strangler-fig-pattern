@@ -39,4 +39,27 @@ public sealed class Authenticator(
 
         return new() { AccessToken = token };
     }
+
+    public string CreateEmailToken(string email)
+    {
+        var claims = new List<Claim> { new(ClaimTypes.Email, email) };
+
+        var signingCredentials = new SigningCredentials(
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.SigningKey)),
+            SecurityAlgorithms.HmacSha256
+        );
+
+        var expires = DateTime.Now.Add(options.Value.Expiry ?? TimeSpan.FromHours(1));
+
+        var jwt = new JwtSecurityToken(
+            issuer: options.Value.Issuer,
+            audience: options.Value.Issuer,
+            claims: claims,
+            expires: expires,
+            signingCredentials: signingCredentials
+        );
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        return tokenHandler.WriteToken(jwt);
+    }
 }
