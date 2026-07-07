@@ -32,7 +32,6 @@ var app = builder.Build();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

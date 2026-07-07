@@ -33,17 +33,14 @@ public static class Extensions
         services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
 
-        // security
         services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
         services.AddSingleton<IPasswordManager, PasswordManager>();
 
-        // email
         services.Configure<EmailOptions>(
             configuration.GetRequiredSection(EmailOptionsSectionName)
         );
         services.AddSingleton<IEmailSender, MailkitService>();
 
-        // auth
         var authOptions = configuration.GetOptions<AuthOptions>(AuthOptionsSectionName);
         services
             .Configure<AuthOptions>(configuration.GetRequiredSection(AuthOptionsSectionName))
