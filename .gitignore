@@ -54,6 +54,8 @@ Desktop.ini
 ~$*
 
 # Secrets / local config
+.env
+!.env.example
 appsettings.Development.json
 appsettings.Local.json
 secrets.json
