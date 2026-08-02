@@ -24,4 +24,14 @@ public class TokenService : ITokenService
 
         return null;
     }
+
+    public string? GetEmailFromToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var decodedToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+
+        return decodedToken
+            ?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)
+            ?.Value;
+    }
 }

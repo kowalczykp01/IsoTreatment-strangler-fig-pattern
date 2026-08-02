@@ -20,6 +20,11 @@ public sealed class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> log
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             await context.Response.WriteAsync(exception.Message);
         }
+        catch (EmailAlreadyConfirmedException exception)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await context.Response.WriteAsync(exception.Message);
+        }
         catch (InvalidCredentialsException exception)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;

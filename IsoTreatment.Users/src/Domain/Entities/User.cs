@@ -84,4 +84,9 @@ public class User
             EmailConfirmed = false;
         }
     }
+
+    public void ConfirmEmail()
+    {
+        EmailConfirmed = true;
+    }
 }

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Abstractions;
+using Application.Commands.ConfirmEmail;
 using Application.Commands.SignIn;
 using Application.Commands.SignUp;
 using Application.Commands.UpdateUserInfo;
@@ -74,6 +75,18 @@ namespace Api
             await handler.HandleAsync(command);
 
             return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("confirmEmail")]
+        public async Task<ActionResult> ConfirmEmail(
+            [FromQuery] string emailConfirmationToken,
+            [FromServices] ICommandHandler<ConfirmEmailCommand> handler
+        )
+        {
+            await handler.HandleAsync(new ConfirmEmailCommand(emailConfirmationToken));
+
+            return Ok("Email confirmed, thank you!");
         }
 
         [Authorize]

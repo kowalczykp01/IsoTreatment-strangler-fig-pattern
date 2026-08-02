@@ -1,4 +1,5 @@
 using Application.Abstractions;
+using Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -32,6 +33,8 @@ public static class Extensions
         );
 
         services.AddValidatorsFromAssembly(applicationAssembly);
+
+        services.AddSingleton<ITokenService, TokenService>();
 
         return services;
     }
