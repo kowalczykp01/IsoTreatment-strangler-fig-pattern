@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Abstractions;
 using Application.Commands.ConfirmEmail;
+using Application.Commands.ForgotPassword;
 using Application.Commands.SignIn;
 using Application.Commands.SignUp;
 using Application.Commands.UpdateUserInfo;
@@ -87,6 +88,18 @@ namespace Api
             await handler.HandleAsync(new ConfirmEmailCommand(emailConfirmationToken));
 
             return Ok("Email confirmed, thank you!");
+        }
+
+        [AllowAnonymous]
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult> ForgotPassword(
+            [FromQuery] string email,
+            [FromServices] ICommandHandler<ForgotPasswordCommand> handler
+        )
+        {
+            await handler.HandleAsync(new ForgotPasswordCommand(email));
+
+            return Ok();
         }
 
         [Authorize]

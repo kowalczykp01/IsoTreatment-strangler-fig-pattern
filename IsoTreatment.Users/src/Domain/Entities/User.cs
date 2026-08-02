@@ -89,4 +89,9 @@ public class User
     {
         EmailConfirmed = true;
     }
+
+    public void SetResetPasswordToken(string resetPasswordToken)
+    {
+        ResetPasswordToken = resetPasswordToken;
+    }
 }
