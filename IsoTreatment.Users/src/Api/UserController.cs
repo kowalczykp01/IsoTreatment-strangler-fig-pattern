@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application.Abstractions;
 using Application.Commands.ConfirmEmail;
 using Application.Commands.ForgotPassword;
+using Application.Commands.ResetPassword;
 using Application.Commands.SignIn;
 using Application.Commands.SignUp;
 using Application.Commands.UpdateUserInfo;
@@ -98,6 +99,19 @@ namespace Api
         )
         {
             await handler.HandleAsync(new ForgotPasswordCommand(email));
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword(
+            [FromQuery] string token,
+            [FromBody] ResetPasswordCommand command,
+            [FromServices] ICommandHandler<ResetPasswordCommand> handler
+        )
+        {
+            await handler.HandleAsync(command with { Token = token });
 
             return Ok();
         }

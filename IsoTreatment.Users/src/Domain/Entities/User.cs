@@ -94,4 +94,10 @@ public class User
     {
         ResetPasswordToken = resetPasswordToken;
     }
+
+    public void ResetPassword(string passwordHash)
+    {
+        PasswordHash = passwordHash;
+        ResetPasswordToken = null;
+    }
 }

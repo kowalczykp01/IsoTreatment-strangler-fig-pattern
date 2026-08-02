@@ -30,6 +30,11 @@ public sealed class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> log
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             await context.Response.WriteAsync(exception.Message);
         }
+        catch (ResetPasswordFailedException exception)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await context.Response.WriteAsync(exception.Message);
+        }
         catch (UserNotFoundException exception)
         {
             context.Response.StatusCode = StatusCodes.Status404NotFound;
