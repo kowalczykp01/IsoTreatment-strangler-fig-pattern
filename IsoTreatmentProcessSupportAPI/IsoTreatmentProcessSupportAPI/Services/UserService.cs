@@ -18,7 +18,7 @@ namespace IsoTreatmentProcessSupportAPI.Services
         string GenerateEmailToken(string userEmail);
         string GenerateLoginToken(LoginDto dto);
         UserDto GetUserInfo(string token);
-        UserDto UpdateUserInfo(string token, UserDto dto);
+        UpdateUserDto UpdateUserInfo(string token, UpdateUserDto dto);
         void ForgotPassword(string email);
         void ResetPassword(string token, ResetPasswordDto dto);
     }
@@ -58,7 +58,7 @@ namespace IsoTreatmentProcessSupportAPI.Services
             return userDto;
         }
 
-        public UserDto UpdateUserInfo(string token, UserDto dto)
+        public UpdateUserDto UpdateUserInfo(string token, UpdateUserDto dto)
         {
             int userId = _tokenService.GetUserIdFromToken(token);
 
@@ -97,7 +97,7 @@ namespace IsoTreatmentProcessSupportAPI.Services
 
             _dbContext.SaveChanges();
 
-            var updatedUserInfo = _mapper.Map<UserDto>(user);
+            var updatedUserInfo = _mapper.Map<UpdateUserDto>(user);
 
             return updatedUserInfo;
         }

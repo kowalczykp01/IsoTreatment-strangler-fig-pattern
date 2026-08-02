@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application.Abstractions;
 using Application.Commands.SignIn;
 using Application.Commands.SignUp;
+using Application.Commands.UpdateUserInfo;
 using Application.Queries.GetUserInfo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,18 @@ namespace Api
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var result = await handler.HandleAsync(new(userId));
+
+            return Ok(result);
+        }
+        [Authorize]
+        [HttpPost("info/update")]
+        public async Task<ActionResult<UpdateUserInfoCommandResult>> UpdateUserInfo(
+            [FromBody] UpdateUserInfoCommand command,
+            [FromServices] ICommandHandler<UpdateUserInfoCommand, UpdateUserInfoCommandResult> handler
+        )
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var result = await handler.HandleAsync(command with { Id = userId });
 
             return Ok(result);
         }

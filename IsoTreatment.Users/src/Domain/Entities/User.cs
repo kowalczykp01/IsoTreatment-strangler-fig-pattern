@@ -66,4 +66,22 @@ public class User
             resetPasswordToken: resetPasswordToken
         );
     }
+
+    public void UpdateUser(
+        string firstName,
+        string lastName,
+        int weight,
+        string? email = default
+    )
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Weight = weight;
+
+        if (email is not null)
+        {
+            Email = email;
+            EmailConfirmed = false;
+        }
+    }
 }
