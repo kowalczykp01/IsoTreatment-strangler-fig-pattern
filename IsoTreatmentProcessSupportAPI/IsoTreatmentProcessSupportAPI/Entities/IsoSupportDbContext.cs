@@ -5,7 +5,13 @@ namespace IsoTreatmentProcessSupportAPI.Entities
 {
     public class IsoSupportDbContext : DbContext
     {
-        private string _connectionString = "Server=isotreatment.database,1433;Database=IsoTreatmentProcessSupport;User Id=sa;Password=boxsy2-xobpyp-tonmUs;Encrypt=true;TrustServerCertificate=true;";
+        private readonly string _connectionString;
+
+        public IsoSupportDbContext(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("DbConnectionString");
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Entry> Entries { get; set; }
         public DbSet<Reminder> Reminders { get; set; }

@@ -5,8 +5,12 @@ using Domain.UnitOfWork;
 
 namespace Application.Commands.SignUp;
 
-public sealed class SignUpCommandHandler(IUnitOfWork unitOfWork, IPasswordManager passwordManager)
-    : ICommandHandler<SignUpCommand>
+public sealed class SignUpCommandHandler(
+    IUnitOfWork unitOfWork,
+    IPasswordManager passwordManager,
+    IAuthenticator authenticator,
+    IEmailSender emailSender
+) : ICommandHandler<SignUpCommand>
 {
     public async Task HandleAsync(SignUpCommand command)
     {
@@ -30,6 +34,9 @@ public sealed class SignUpCommandHandler(IUnitOfWork unitOfWork, IPasswordManage
         );
 
         await unitOfWork.UserRepository.CreateAsync(user);
+
+        var emailConfirmationToken = authenticator.CreateEmailToken(user.Email);
+        emailSender.SendEmailConfirmationMail(user.Email, emailConfirmationToken);
 
         await unitOfWork.SaveChangesAsync();
     }

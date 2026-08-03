@@ -88,7 +88,7 @@ namespace IsoTreatmentProcessSupportAPI.Controllers
 
         [Authorize]
         [HttpPost("info/update")]
-        public ActionResult<UserDto> UpdateUserInfo([FromBody] UserDto dto)
+        public ActionResult<UpdateUserDto> UpdateUserInfo([FromBody] UpdateUserDto dto)
         {
             var token = HttpContext.Request.Cookies["token"];
 

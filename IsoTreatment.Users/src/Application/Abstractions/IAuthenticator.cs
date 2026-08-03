@@ -5,4 +5,5 @@ namespace Application.Abstractions;
 public interface IAuthenticator
 {
     JwtDto CreateToken(int userId);
+    string CreateEmailToken(string email);
 }

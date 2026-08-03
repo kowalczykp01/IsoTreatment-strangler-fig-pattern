@@ -1,5 +1,5 @@
-using System.Security.Authentication;
 using Application.Abstractions;
+using Application.Exceptions;
 using Domain.UnitOfWork;
 
 namespace Application.Commands.SignIn;
@@ -17,12 +17,17 @@ public sealed class SignInCommandHandler(
 
         if (user is null)
         {
-            throw new InvalidCredentialException();
+            throw new InvalidCredentialsException();
+        }
+
+        if (!user.EmailConfirmed)
+        {
+            throw new EmailNotConfirmedException();
         }
 
         if (!passwordManager.Validate(command.Password, user.PasswordHash))
         {
-            throw new InvalidCredentialException();
+            throw new InvalidCredentialsException();
         }
 
         var jwt = authenticator.CreateToken(user.Id);

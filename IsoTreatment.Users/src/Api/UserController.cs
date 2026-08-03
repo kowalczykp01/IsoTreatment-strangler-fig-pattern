@@ -1,8 +1,12 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Abstractions;
+using Application.Commands.ConfirmEmail;
+using Application.Commands.ForgotPassword;
+using Application.Commands.ResetPassword;
 using Application.Commands.SignIn;
 using Application.Commands.SignUp;
+using Application.Commands.UpdateUserInfo;
 using Application.Queries.GetUserInfo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +28,18 @@ namespace Api
 
             return Ok(result);
         }
+        [Authorize]
+        [HttpPost("info/update")]
+        public async Task<ActionResult<UpdateUserInfoCommandResult>> UpdateUserInfo(
+            [FromBody] UpdateUserInfoCommand command,
+            [FromServices] ICommandHandler<UpdateUserInfoCommand, UpdateUserInfoCommandResult> handler
+        )
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var result = await handler.HandleAsync(command with { Id = userId });
+
+            return Ok(result);
+        }
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -40,11 +56,11 @@ namespace Api
                 jwt!.AccessToken,
                 new CookieOptions
                 {
-                    Expires = DateTime.Now.AddMinutes(15),
+                    Expires = DateTime.Now.AddDays(1),
                     HttpOnly = true,
                     Secure = true,
                     IsEssential = true,
-                    SameSite = SameSiteMode.Lax,
+                    SameSite = SameSiteMode.None,
                 }
             );
 
@@ -60,7 +76,64 @@ namespace Api
         {
             await handler.HandleAsync(command);
 
-            return Created();
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("confirmEmail")]
+        public async Task<ActionResult> ConfirmEmail(
+            [FromQuery] string emailConfirmationToken,
+            [FromServices] ICommandHandler<ConfirmEmailCommand> handler
+        )
+        {
+            await handler.HandleAsync(new ConfirmEmailCommand(emailConfirmationToken));
+
+            return Ok("Email confirmed, thank you!");
+        }
+
+        [AllowAnonymous]
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult> ForgotPassword(
+            [FromQuery] string email,
+            [FromServices] ICommandHandler<ForgotPasswordCommand> handler
+        )
+        {
+            await handler.HandleAsync(new ForgotPasswordCommand(email));
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword(
+            [FromQuery] string token,
+            [FromBody] ResetPasswordCommand command,
+            [FromServices] ICommandHandler<ResetPasswordCommand> handler
+        )
+        {
+            await handler.HandleAsync(command with { Token = token });
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public ActionResult Logout()
+        {
+            HttpContext.Response.Cookies.Append(
+                "token",
+                "",
+                new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(-1),
+                    HttpOnly = true,
+                    Secure = true,
+                    IsEssential = true,
+                    SameSite = SameSiteMode.None,
+                }
+            );
+
+            return Ok("User logged out successfully");
         }
     }
 }
